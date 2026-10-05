@@ -1,17 +1,16 @@
 /** @format */
 
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import { appConfig } from "./config";
 
-const config = require("./config/index");
-
-const app = express();
+export const app = express();
 
 // CORS
 app.use(
   cors({
-    origin: config.cors.origin,
-    credentials: config.cors.credentials,
+    origin: appConfig.cors.origin,
+    credentials: appConfig.cors.credentials,
     methods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
@@ -21,11 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Health check
-app.get("/", (req: any, res: any) => {
+app.get("/", (_req, res) => {
   res.json({
     success: true,
     message: "Server is running",
   });
 });
-
-module.exports = app;
