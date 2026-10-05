@@ -1,6 +1,6 @@
 /** @format */
 
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ interface Config {
   port: number;
 
   postgres: {
-    url: string | undefined;
+    url: string;
   };
 
   api: {
@@ -25,15 +25,18 @@ interface Config {
 const port = Number(process.env.PORT || 5000);
 const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
 
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) throw new Error("DATABASE_URL is required.");
+
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error("PORT must be an integer between 1 and 65535.");
 }
 
-const appConfig: Config = {
+export const appConfig: Config = {
   port,
 
   postgres: {
-    url: process.env.DATABASE_URL,
+    url: databaseUrl,
   },
 
   api: {
@@ -46,5 +49,3 @@ const appConfig: Config = {
     credentials: corsOrigin !== "*",
   },
 };
-
-module.exports = appConfig;
